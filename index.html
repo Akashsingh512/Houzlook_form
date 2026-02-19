@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interior Design Consultation Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            /* Deep charcoal/teal */
+            --accent-color: #e70000;
+            /* Muted Gold/Terracotta */
+            --accent-hover: #ff0505;
+            --bg-light: #f8f9fa;
+            --text-dark: #333333;
+            --text-muted: #777777;
+            --border-color: #e1e1e1;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 550px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background-color: #eee;
+            height: 6px;
+            width: 100%;
+        }
+
+        .progress-bar {
+            background-color: red   ;
+            height: 100%;
+            width: 25%;
+            /* Start at 25% */
+            transition: width 0.4s ease;
+        }
+
+        /* Form Content Styling */
+        .form-content {
+            padding: 40px;
+        }
+
+        .step-header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .step-header h2 {
+            margin: 0 0 10px 0;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .step-header p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* Input Styling */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--primary-color);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            color: var(--text-dark);
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(192, 160, 98, 0.1);
+        }
+
+        /* Visual Selectors (Cards & Chips) styling */
+        .visual-selector-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .selector-option {
+            position: relative;
+        }
+
+        /* Hide default radio/checkbox */
+        .selector-option input[type="radio"],
+        .selector-option input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* The visual card label */
+        .selector-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: 500;
+            color: var(--text-dark);
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        .selector-card svg {
+            margin-bottom: 10px;
+            fill: var(--primary-color);
+            transition: fill 0.3s;
+        }
+
+        /* Styling when checked */
+        .selector-option input:checked+.selector-card {
+            border-color: var(--accent-color);
+            background-color: rgba(192, 160, 98, 0.05);
+            color: var(--accent-color);
+        }
+
+        .selector-option input:checked+.selector-card svg {
+            fill: var(--accent-color);
+        }
+
+        /* Budget Chips Styling */
+        .budget-chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .chip-label {
+            padding: 10px 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .selector-option input:checked+.chip-label {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: none;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background-color: #e9ecef;
+            color: var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #dde0e3;
+        }
+
+        /* Utility to hide steps */
+        .hidden {
+            display: none;
+        }
+
+        .error-message {
+            color: #d9534f;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .input-group.error .form-input {
+            border-color: #d9534f;
+        }
+
+        .input-group.error .error-message {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <form id="mainForm" action="#" method="POST">
+
+            <div class="form-content form-step" id="step1">
+                <div class="step-header">
+                    <h2>Let's define your dream space.</h2>
+                    <p>First, a little about you so we can stay in touch.</p>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="name">Full Name *</label>
+                    <input type="text" id="name" name="name" class="form-input">
+                    <div class="error-message">Please enter your name.</div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="contact">Contact Number *</label>
+                    <input type="tel" id="contact" name="contact" class="form-input" >
+                    <div class="error-message">Please enter a valid contact number.</div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" class="form-input" >
+                    <div class="error-message">Please enter a valid email.</div>
+                </div>
+
+                <button type="button" class="btn btn-primary" onclick="nextStep(2)">Next: Property Details →</button>
+            </div>
+
+            <div class="form-content form-step hidden" id="step2">
+                <div class="step-header">
+                    <h2>Tell us about your property.</h2>
+                    <p>Knowing the space helps us prepare better.</p>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Property Type</label>
+                    <div class="visual-selector-grid">
+                        <label class="selector-option">
+                            <input type="radio" name="propertyType" value="Apartment" checked>
+                            <div class="selector-card">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+                                    <path
+                                        d="M17 11V3H7v4H3v14h18V11h-4zm-10 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z" />
+                                </svg>
+                                Apartment
+                            </div>
+                        </label>
+                        <label class="selector-option">
+                            <input type="radio" name="propertyType" value="Villa">
+                            <div class="selector-card">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+                                    <path
+                                        d="M19 9.3V4h-3v2.6L12 3 2 12h3v8h6v-6h2v6h6v-8h3l-3-2.7zM17 18h-2v-6H9v6H5v-7.1l7-6.3 7 6.3V18z" />
+                                </svg>
+                                Independent Villa
+                            </div>
+                        </label>
+                        <label class="selector-option">
+                            <input type="radio" name="propertyType" value="BuilderFloor">
+                            <div class="selector-card">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+                                    <path d="M14 6V4h-4v2h4zM4 8v11h16V8H4zm14 9H6v-7h12v7z" />
+                                </svg>
+                                Builder Floor
+                            </div>
+                        </label>
+                        <label class="selector-option">
+                            <input type="radio" name="propertyType" value="Other">
+                            <div class="selector-card">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+                                    <path
+                                        d="M7 17h10v2H7zm0-4h10v2H7zm0-4h10v2H7zm2-9C6.48 2 2 6.48 2 11s4.48 9 9 9 9-4.48 9-9-4.48-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7z" />
+                                </svg>
+                                Other
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="location">Property Location *</label>
+                    <input type="text" id="location" name="location" class="form-input"
+                        placeholder="E.g., Whitefield, Bangalore">
+                    <div class="error-message">Please enter a location.</div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="possession">Possession Date</label>
+                    <input type="date" id="possession" name="possession" class="form-input">
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep(1)">← Back</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep(3)">Next: Scope & Budget →</button>
+                </div>
+            </div>
+
+            <div class="form-content form-step hidden" id="step3">
+                <div class="step-header">
+                    <h2>Scope & Investment</h2>
+                    <p>This helps us align with your expectations.</p>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Are you looking for End-to-End interiors?</label>
+                    <div class="visual-selector-grid">
+                        <label class="selector-option">
+                            <input type="radio" name="endToEnd" value="Yes" checked>
+                            <div class="selector-card">
+                                Yes, Full Home Design
+                            </div>
+                        </label>
+                        <label class="selector-option">
+                            <input type="radio" name="endToEnd" value="No">
+                            <div class="selector-card">
+                                No, Specific Modular Only
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="input-group" style="margin-top: 50px;">
+                    <label class="input-label">What is your tentative budget?</label>
+                    <div class="budget-chips-container">
+                        <label class="selector-option">
+                            <input type="radio" name="budget" value="<5L">
+                            <span class="chip-label"> ₹6L - ₹10Lakhs</span>
+                        </label>
+                        <label class="selector-option">
+                            <input type="radio" name="budget" value="5-10L" checked>
+                            <span class="chip-label">₹10L - ₹15Lakhs</span>
+                        </label>
+                        <label class="selector-option">
+                            <input type="radio" name="budget" value="10-15L">
+                            <span class="chip-label">₹15L - ₹25Lakhs</span>
+                        </label>
+                        <!-- <label class="selector-option">
+                            <input type="radio" name="budget" value="15-25L">
+                            <span class="chip-label">₹15L - ₹25L</span>
+                        </label>
+                        <label class="selector-option">
+                            <input type="radio" name="budget" value="25L+">
+                            <span class="chip-label">₹25 Lakhs +</span>
+                        </label> -->
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep(2)">← Back</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep(4)">Next: Timeline →</button>
+                </div>
+            </div>
+
+            <div class="form-content form-step hidden" id="step4">
+                <div class="step-header">
+                    <h2>Almost done!</h2>
+                    <p>Just a few final details to wrap up.</p>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="startDate">When do you want to start the work?</label>
+                    <select id="startDate" name="startDate" class="form-input">
+                        <option value="Immediately">Immediately</option>
+                        <option value="Within 1 Month" selected>Within 1 Month</option>
+                        <option value="1-3 Months">1-3 Months</option>
+                        <option value="3+ Months">3+ Months</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="concernedPerson">Alternative Concerned Person (Optional)</label>
+                    <input type="text" id="concernedPerson" name="concernedPerson" class="form-input"
+                        placeholder="If different from main contact">
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep(3)">← Back</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <script>
+        let currentStep = 1;
+        const totalSteps = 4;
+        const progressBar = document.getElementById('progressBar');
+
+        function updateProgress(step) {
+            const percentage = (step / totalSteps) * 100;
+            progressBar.style.width = percentage + '%';
+        }
+
+        function showStep(stepNumber) {
+            // Hide all steps
+            document.querySelectorAll('.form-step').forEach(step => {
+                step.classList.add('hidden');
+            });
+
+            // Show the target step
+            const targetStepDiv = document.getElementById('step' + stepNumber);
+            if (targetStepDiv) {
+                targetStepDiv.classList.remove('hidden');
+                currentStep = stepNumber;
+                updateProgress(currentStep);
+            }
+        }
+
+        function validateStep(stepNumber) {
+            let isValid = true;
+
+            // FIX: Variable name fixed (removed space)
+            const currentStepDiv = document.getElementById('step' + stepNumber);
+
+            // If we can't find the step, stop here
+            if (!currentStepDiv) return false;
+
+            // Validation for Step 1
+            if (stepNumber === 1) {
+                const name = document.getElementById('name');
+                const contact = document.getElementById('contact');
+                const email = document.getElementById('email');
+
+                if (!name.value.trim()) { setError(name); isValid = false; } else { clearError(name); }
+                if (!contact.value.trim()) { setError(contact); isValid = false; } else { clearError(contact); }
+                if (!email.value.trim() || !email.value.includes('@')) { setError(email); isValid = false; } else { clearError(email); }
+            }
+
+            // Validation for Step 2
+            if (stepNumber === 2) {
+                const location = document.getElementById('location');
+                if (!location.value.trim()) { setError(location); isValid = false; } else { clearError(location); }
+            }
+
+            return isValid;
+        }
+
+        function setError(element) {
+            element.closest('.input-group').classList.add('error');
+        }
+
+        function clearError(element) {
+            element.closest('.input-group').classList.remove('error');
+        }
+
+        // Function called by the "Next" button
+        function nextStep(targetStep) {
+            // Validate the step we are currently on (which is targetStep - 1)
+            if (validateStep(currentStep)) {
+                showStep(targetStep);
+            }
+        }
+
+        // Function called by the "Back" button
+        function prevStep(targetStep) {
+            showStep(targetStep);
+        }
+
+        // Initialize: Show Step 1 immediately
+        showStep(1);
+
+        // Form Submit handler
+        const form = document.getElementById('mainForm');
+        if (form) {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                alert("Success! The form data is ready.");
+                // Reset form for demo
+                this.reset();
+                showStep(1);
+            });
+        }
+    </script>
+
+</body>
+
+</html>
